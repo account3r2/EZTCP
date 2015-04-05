@@ -112,3 +112,5 @@ function eztcp.process(set)
 		end
 	end
 end
+
+return eztcp
