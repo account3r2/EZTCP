@@ -67,12 +67,12 @@ function eztcp.create.server(bindTo, bindToPort, set, timeout)
 		server:settimeout(timeout)		-- Set timeout if we got it.
 	end
 
-	return server, set
+	return server
 end
 
 --[[
   ||  Process returns:
-  ||    client object or nil, set, message or status code or nil, error or nil
+  ||    client object or nil, message or status code or nil, error or nil, ip, port
   ||  Status codes:
   ||    0 - Client connected.
   ||    1 - Client disconnected.
@@ -87,27 +87,29 @@ function eztcp.process(set)
 		if object == set[1] then
 			local client, err = object:accept()		-- Create a client object.
 			if client then
+				local ip, port = client:getpeername()
 				set:insert(client)		-- Insert client into set.
-				return client, set, 0, nil
+				return client, 0, nil, ip, port
 			else
-				return nil, set, nil, "Could not create new client: " .. err
+				return nil, nil, "Could not create new client: " .. err, nil, nil
 			end
 		else
+			local ip, port = object:getpeername()
 			local line, err = object:receive()
 			if err and err == "closed" then
 				set:remove(object)		-- If client closed their connection.
 				object:close()			-- Closed the connection.
-				return object, set, 1, nil
+				return object, 1, nil, ip, port
 			elseif err and err == "timeout" then
 				set:remove(object)		-- If client timed out.
 				object:close()			-- Close the connection.
-				return object, set, 2, nil
+				return object, 2, nil, ip, port
 			elseif err then
 				set:remove(object)		-- If an error occurred.
 				object:close()			-- Close the connection.
-				return object, set, nil, err
+				return object, nil, err, ip, port
 			else		-- If we got here, we received a message successfully.
-				return object, set, line, nil
+				return object, line, nil, ip, port
 			end
 		end
 	end
