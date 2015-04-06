@@ -1,5 +1,5 @@
 --[[========================================================================\\
-  ||  EZTCP - A library to simplify TCP networking.                         ||
+  ||  EZTCP (v1.0.0) - A library to simplify TCP networking.                ||
   ||  Copyright (C) 2015 Niko Geil.                                         ||
   ||                                                                        ||
   ||  This program is free software: you can redistribute it and/or modify  ||
