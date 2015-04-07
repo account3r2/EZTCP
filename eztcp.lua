@@ -43,15 +43,9 @@ function eztcp.create.set()
 	return set
 end
 
--- Send a raw message (appending a newline).
-function eztcp.send.raw(client, line)
-	local bytes, err = client:send(line .. "\n")		-- Get bytes or err.
-	return bytes, err
-end
-
 -- Send a raw message.
-function eztcp.send.realRaw(client, line)
-	local bytes, err = client:send(line)		-- Get bytes or err.
+function eztcp.send.raw(client, line, noNewline)
+	local bytes, err = client:send(line .. (noNewline and "" or "\n"))		-- Get bytes or err.
 	return bytes, err
 end
 
